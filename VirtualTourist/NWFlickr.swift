@@ -18,6 +18,8 @@ class NWFlickr : NSObject {
     
     var defaultParams : [String:NSObject] = [
         Keys.apiKey:Base.apiKey,
+        Keys.dataFormat:Base.format,
+        Keys.nojsoncallback:Base.jsoncallback,
         Keys.extras:"url_m"
     ]
     
@@ -27,7 +29,7 @@ class NWFlickr : NSObject {
     }
     
     //generic network access call
-    func nwGetJSON(nwMethod : String, parameters : [String:AnyObject], completionHandler: CompletionHandler) -> NSURLSessionDataTask {
+    func nwGetJSON(parameters : [String:AnyObject], completionHandler: CompletionHandler) -> NSURLSessionDataTask {
         //nwMethod is the particular Flickr network method we're utilizing
         //parameters is a dictionary of parameters to be filled in as part of this api call
         let mutableParameters = addDefaultParams(parameters, oldParams: defaultParams)
@@ -35,7 +37,7 @@ class NWFlickr : NSObject {
         //MARK: don't forget to add bbox at some point
         
         //configure the request
-        let urlString = Base.url + nwMethod + NWFlickr.escapedParameters(mutableParameters)
+        let urlString = Base.url + NWFlickr.escapedParameters(mutableParameters)
         let url = NSURL(string: urlString)!
         let request = NSURLRequest(URL: url)
     //debug
