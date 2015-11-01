@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import MapKit
 
-class Pin : NSManagedObject, MKAnnotation {
+class Pin : NSManagedObject {
     //used for network calls
     struct Keys {
         static let bbox = "bbox"
@@ -22,10 +22,6 @@ class Pin : NSManagedObject, MKAnnotation {
     @NSManaged var bounds : Double
     @NSManaged var bbox : NSMutableDictionary
     @NSManaged var photos : [Photo]
-    
-    //implement MKAnnotation protocol
-    //https://bakyelli.wordpress.com/2013/10/13/creating-custom-map-annotations-using-mkannotation-protocol/
-    var coordinate = CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
     
 }
 
