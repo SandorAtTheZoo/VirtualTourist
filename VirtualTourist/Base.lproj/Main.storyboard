@@ -77,9 +77,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="dOP-gB-VA1">
-                                <rect key="frame" x="20" y="170" width="560" height="430"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="dOP-gB-VA1">
+                                <rect key="frame" x="20" y="214" width="560" height="356"/>
                                 <animations/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="iTn-dh-aOO">
                                     <size key="itemSize" width="50" height="50"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -100,23 +101,50 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="inv-sm-oms">
+                                <rect key="frame" x="20" y="64" width="560" height="150"/>
+                                <animations/>
+                            </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bkf-AA-bbH">
+                                <rect key="frame" x="0.0" y="570" width="600" height="30"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="laC-wb-PW1"/>
+                                </constraints>
+                                <state key="normal" title="New Collection"/>
+                            </button>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="dOP-gB-VA1" firstAttribute="width" secondItem="cGq-Ur-KQR" secondAttribute="width" id="11W-jr-obI"/>
+                            <constraint firstItem="bkf-AA-bbH" firstAttribute="centerX" secondItem="cGq-Ur-KQR" secondAttribute="centerX" id="2F7-99-cju"/>
                             <constraint firstItem="dOP-gB-VA1" firstAttribute="top" secondItem="1K6-Yk-qtF" secondAttribute="bottom" constant="150" id="8cF-yv-6bu"/>
                             <constraint firstAttribute="trailingMargin" secondItem="dOP-gB-VA1" secondAttribute="trailing" id="Ddk-tV-jIF"/>
+                            <constraint firstItem="dOP-gB-VA1" firstAttribute="top" secondItem="inv-sm-oms" secondAttribute="bottom" id="Fu5-91-ww5"/>
                             <constraint firstItem="dOP-gB-VA1" firstAttribute="leading" secondItem="cGq-Ur-KQR" secondAttribute="leadingMargin" id="KyG-gx-57H"/>
+                            <constraint firstItem="bkf-AA-bbH" firstAttribute="top" secondItem="dOP-gB-VA1" secondAttribute="bottom" id="NEo-iX-JV1"/>
+                            <constraint firstItem="inv-sm-oms" firstAttribute="leading" secondItem="cGq-Ur-KQR" secondAttribute="leadingMargin" id="WB8-h4-jIc"/>
+                            <constraint firstItem="bkf-AA-bbH" firstAttribute="top" secondItem="dOP-gB-VA1" secondAttribute="bottom" id="Y4B-qd-3OO"/>
                             <constraint firstItem="Qvb-Ee-u6g" firstAttribute="top" secondItem="dOP-gB-VA1" secondAttribute="bottom" id="cHi-UZ-hD3"/>
+                            <constraint firstItem="inv-sm-oms" firstAttribute="top" secondItem="1K6-Yk-qtF" secondAttribute="bottom" id="fGk-rV-D9S"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="inv-sm-oms" secondAttribute="trailing" id="gOq-WU-QkW"/>
+                            <constraint firstItem="bkf-AA-bbH" firstAttribute="width" secondItem="cGq-Ur-KQR" secondAttribute="width" id="hYT-oF-oUn"/>
+                            <constraint firstItem="bkf-AA-bbH" firstAttribute="centerY" secondItem="cGq-Ur-KQR" secondAttribute="centerY" id="iiw-Sh-Yfg"/>
+                            <constraint firstItem="Qvb-Ee-u6g" firstAttribute="top" secondItem="bkf-AA-bbH" secondAttribute="bottom" id="toZ-DX-Zuk"/>
+                            <constraint firstItem="bkf-AA-bbH" firstAttribute="leading" secondItem="cGq-Ur-KQR" secondAttribute="leadingMargin" id="vfa-yj-zSY"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="11W-jr-obI"/>
+                                <exclude reference="NEo-iX-JV1"/>
+                                <exclude reference="iiw-Sh-Yfg"/>
+                                <exclude reference="vfa-yj-zSY"/>
+                                <exclude reference="cHi-UZ-hD3"/>
                             </mask>
                         </variation>
                     </view>
-                    <navigationItem key="navigationItem" id="eBx-sC-wNL"/>
+                    <navigationItem key="navigationItem" id="eBx-sC-wNL">
+                        <barButtonItem key="leftBarButtonItem" title="OK" id="czt-7t-2gu"/>
+                    </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j9u-Ja-N1c" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
