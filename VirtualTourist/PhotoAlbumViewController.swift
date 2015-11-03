@@ -8,11 +8,24 @@
 
 import UIKit
 
-class PhotoAlbumViewController : UIViewController {
+//worked with 
+//http://stackoverflow.com/questions/24099230/delegates-in-swift
+//to include delegate for return segue
 
+protocol PhotoAlbumViewControllerDelegate {
+    func returnToMap(controller : PhotoAlbumViewController)
+}
+
+class PhotoAlbumViewController : UIViewController {
+    
+    var delegate : PhotoAlbumViewControllerDelegate! = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+    }
+    @IBAction func selectNewLocation(sender: UIBarButtonItem) {
+        print("delegate call to return")
+        self.delegate?.returnToMap(self)
     }
 }

@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-class TravelLocationViewController: UIViewController, MKMapViewDelegate {
+class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAlbumViewControllerDelegate {
 
     //need the ! because will have compile error of 'no initializers' which basically means (I think)
     //that without ! the variables start in an undetermined state (like declaring pointers without assignment in C, then run-time access would error out
@@ -55,8 +55,10 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate {
             let aPin = MyAnnotation()
             aPin.coordinate = mapLoc
             self.mapView.addAnnotation(aPin)
+            //after pin dropped, automatically fetch photos from flickr
             let getLoc = CmdFlickr()
             getLoc.getPhotosForLocation(mapLoc.latitude, longitude: mapLoc.longitude)
+            self.performSegueWithIdentifier("ToPhotoSegue", sender: self)
             return
         case .Ended:
             print("ENDED : HOPEFULLY A PIN WAS DROPPED")
@@ -65,6 +67,24 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate {
         default:
             print("gesture default message...did something else")
         }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "ToPhotoSegue" {
+            //helped with segue-ing to navigation controller
+            //http://stackoverflow.com/questions/28788416/swift-prepareforsegue-with-navigation-controller
+            let destNavCtrlr = segue.destinationViewController as! UINavigationController
+            let vcDelegate = destNavCtrlr.topViewController as! PhotoAlbumViewController
+            vcDelegate.delegate = self
+            print("going to show photo collection now...add data here")
+        }
+    }
+    
+    func returnToMap(controller: PhotoAlbumViewController) {
+        print("return function called")
+        //necessary to return across a navigation view controller, as many others just pop to
+        //the top of the view controller stack...not desired result in this case.
+        controller.dismissViewControllerAnimated(true, completion: nil)
     }
     
     // Here we create a view with a "right callout accessory view". You might choose to look into other

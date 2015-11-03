@@ -42,11 +42,12 @@
                     </view>
                     <connections>
                         <outlet property="mapView" destination="kot-Lx-5fJ" id="sf0-V6-Z2f"/>
+                        <segue destination="ETV-yW-Nyq" kind="show" identifier="ToPhotoSegue" id="FeE-S3-WQd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="512" y="509"/>
+            <point key="canvasLocation" x="516" y="509"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="pYn-UD-64x">
@@ -63,7 +64,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0BL-WS-H03" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1295" y="509"/>
+            <point key="canvasLocation" x="1285" y="517"/>
         </scene>
         <!--Photo Album View Controller-->
         <scene sceneID="awL-tq-qdK">
@@ -143,7 +144,11 @@
                         </variation>
                     </view>
                     <navigationItem key="navigationItem" id="eBx-sC-wNL">
-                        <barButtonItem key="leftBarButtonItem" title="OK" id="czt-7t-2gu"/>
+                        <barButtonItem key="leftBarButtonItem" title="OK" id="czt-7t-2gu">
+                            <connections>
+                                <action selector="selectNewLocation:" destination="xgZ-oJ-nEp" id="HkL-Y8-Y60"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j9u-Ja-N1c" userLabel="First Responder" sceneMemberID="firstResponder"/>
