@@ -83,24 +83,45 @@
                                 <animations/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="iTn-dh-aOO">
-                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="itemSize" width="115.5" height="108"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="FC3-oD-8aQ">
-                                        <rect key="frame" x="0.0" y="64" width="50" height="50"/>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="photoCell" id="FC3-oD-8aQ" customClass="PhotoCollectionCell" customModule="VirtualTourist" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="64" width="115.5" height="108"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="115.5" height="108"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="oNf-C5-AmC">
+                                                    <rect key="frame" x="23" y="19" width="70" height="70"/>
+                                                    <animations/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="70" id="HmB-qf-soP"/>
+                                                        <constraint firstAttribute="height" constant="70" id="Ui5-hF-Bj4"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
                                             <animations/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <animations/>
+                                        <constraints>
+                                            <constraint firstItem="oNf-C5-AmC" firstAttribute="centerY" secondItem="FC3-oD-8aQ" secondAttribute="centerY" id="4EI-uS-vyM"/>
+                                            <constraint firstItem="oNf-C5-AmC" firstAttribute="centerX" secondItem="FC3-oD-8aQ" secondAttribute="centerX" id="81l-aV-IgB"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="flickrImage" destination="oNf-C5-AmC" id="4mF-wn-iNv"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="xgZ-oJ-nEp" id="FmS-j6-wep"/>
+                                    <outlet property="delegate" destination="xgZ-oJ-nEp" id="wsO-hu-aPJ"/>
+                                </connections>
                             </collectionView>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="inv-sm-oms">
                                 <rect key="frame" x="20" y="64" width="560" height="150"/>
@@ -150,10 +171,13 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="collView" destination="dOP-gB-VA1" id="mVU-G4-pxx"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j9u-Ja-N1c" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2064" y="509"/>
+            <point key="canvasLocation" x="2065" y="517"/>
         </scene>
     </scenes>
 </document>

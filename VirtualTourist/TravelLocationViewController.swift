@@ -21,6 +21,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
     @IBOutlet weak var mapView: MKMapView!
     
     var longPressRecognizer : UILongPressGestureRecognizer!
+    var photoSet = NSMutableSet()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,7 +58,8 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
             self.mapView.addAnnotation(aPin)
             //after pin dropped, automatically fetch photos from flickr
             let getLoc = CmdFlickr()
-            getLoc.getPhotosForLocation(mapLoc.latitude, longitude: mapLoc.longitude)
+            self.photoSet = getLoc.getPhotosForLocation(mapLoc.latitude, longitude: mapLoc.longitude)
+            print("PHOTOSQ!!!!! : \(photoSet)")
             self.performSegueWithIdentifier("ToPhotoSegue", sender: self)
             return
         case .Ended:
@@ -76,6 +78,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
             let destNavCtrlr = segue.destinationViewController as! UINavigationController
             let vcDelegate = destNavCtrlr.topViewController as! PhotoAlbumViewController
             vcDelegate.delegate = self
+            // broken now that I deleted photos array....vcDelegate.photoURLs = self.photoSet
             print("going to show photo collection now...add data here")
         }
     }

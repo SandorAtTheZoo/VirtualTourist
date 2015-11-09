@@ -16,12 +16,7 @@ class Pin : NSManagedObject {
         static let bbox = "bbox"
     }
     //used for core data, pin location derived from MKAnnotationView -> annonation : MKAnnotation -> coordinate : CLCoordinate2D
-    @NSManaged var id : String
-    @NSManaged var latitude : Double
-    @NSManaged var longitude : Double
-    @NSManaged var bounds : Double
-    @NSManaged var bbox : NSMutableDictionary
-    @NSManaged var photos : [Photo]
+
     
 }
 

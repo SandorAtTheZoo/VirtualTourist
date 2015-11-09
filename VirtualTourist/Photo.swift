@@ -15,9 +15,5 @@ class Photo : NSManagedObject {
         static let title = "title"
         static let url = "url_m"
     }
-    
-    @NSManaged var id : String
-    @NSManaged var title : String
-    @NSManaged var url : NSURL
-    @NSManaged var pin : Pin?
+
 }
