@@ -20,6 +20,7 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     
     var delegate : PhotoAlbumViewControllerDelegate! = nil
     var photos : [Photo] = [Photo]()
+    var photoURLs : NSMutableArray? = nil
     @IBOutlet weak var collView: UICollectionView!
     
     override func viewDidLoad() {
@@ -49,16 +50,15 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        //return photos.count
-        return 55
+        return photoURLs!.count
     }
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("photoCell", forIndexPath: indexPath) as! PhotoCollectionCell
         
         //now attach real information from my data to the cell
-        //let pic = photos[indexPath.item]
+        let pic = photoURLs![indexPath.row] as! String
         
-        let testPhoto = NSURL(string: "https://farm6.staticflickr.com/5721/22748359762_17bffd5352.jpg")
+        let testPhoto = NSURL(string: pic)
         let collPhoto = NSData(contentsOfURL: testPhoto!)
         cell.flickrImage.image = UIImage(data: collPhoto!)
         //update cell with data

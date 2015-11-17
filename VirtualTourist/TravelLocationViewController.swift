@@ -21,7 +21,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
     @IBOutlet weak var mapView: MKMapView!
     
     var longPressRecognizer : UILongPressGestureRecognizer!
-    var photoSet = NSMutableSet()
+    var photoArray = NSMutableArray()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,9 +58,21 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
             self.mapView.addAnnotation(aPin)
             //after pin dropped, automatically fetch photos from flickr
             let getLoc = CmdFlickr()
-            self.photoSet = getLoc.getPhotosForLocation(mapLoc.latitude, longitude: mapLoc.longitude)
-            print("PHOTOSQ!!!!! : \(photoSet)")
-            self.performSegueWithIdentifier("ToPhotoSegue", sender: self)
+            //self.photoSet = getLoc.getPhotosForLocation(mapLoc.latitude, longitude: mapLoc.longitude)
+            getLoc.getPhotosForLocation(mapLoc.latitude, longitude: mapLoc.longitude, completionHandler: { (nwData, success, errorStr) -> Void in
+                if success {
+                    //NEED THE IF/LET TO PERFORM THE CAST
+                    if let newArr = nwData {
+                        self.photoArray.addObjectsFromArray(newArr as [AnyObject])
+                    }
+                    print("PHOTOSQ!!!!! : \(self.photoArray)")
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        self.performSegueWithIdentifier("ToPhotoSegue", sender: self)
+                    })
+                } else {
+                    print("failed to get photos from locationViewController")
+                }
+            })
             return
         case .Ended:
             print("ENDED : HOPEFULLY A PIN WAS DROPPED")
@@ -78,7 +90,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
             let destNavCtrlr = segue.destinationViewController as! UINavigationController
             let vcDelegate = destNavCtrlr.topViewController as! PhotoAlbumViewController
             vcDelegate.delegate = self
-            // broken now that I deleted photos array....vcDelegate.photoURLs = self.photoSet
+            vcDelegate.photoURLs = self.photoArray
             print("going to show photo collection now...add data here")
         }
     }
@@ -127,7 +139,19 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
             let long = droppedAt.longitude
             print("pin dropped at : \(lat), \(long)")
             let getLoc = CmdFlickr()
-            getLoc.getPhotosForLocation(lat, longitude: long)
+            getLoc.getPhotosForLocation(lat, longitude: long, completionHandler: { (nwData, success, errorStr) -> Void in
+                if success {
+                    print("network data...........\(nwData)")
+                    //NEED THE IF/LET TO PERFORM THE CAST
+                    if let newArr = nwData {
+                        self.photoArray.addObjectsFromArray(newArr as [AnyObject])
+                    }
+                    print("PHOTO_PIN MOVED!!!!! : \(self.photoArray)")
+                    self.performSegueWithIdentifier("ToPhotoSegue", sender: self)
+                } else {
+                    print("failed to get photos from locationViewController")
+                }
+            })
         }
     }
     

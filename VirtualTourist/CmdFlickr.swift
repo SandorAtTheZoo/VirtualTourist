@@ -14,8 +14,8 @@ class CmdFlickr {
     //add lat/long for parameters
     //add completionHandler to account for asynchronous network data return so that
     //will wait for network return without using notifier
-    func getPhotosForLocation(latitude: Double, longitude: Double)-> NSMutableSet {
-        var photoSet = NSMutableSet()
+    func getPhotosForLocation(latitude: Double, longitude: Double, completionHandler:(nwData : NSMutableArray?, success:Bool, errorStr:String?)->Void) {
+        var photoArr = NSMutableArray()
         let location = [
             "method":NWFlickr.APIFuncs.movieSearch,
             "lat":latitude,
@@ -26,14 +26,16 @@ class CmdFlickr {
             //1) segue to next view
             //2) while downloading each image into its own entity
             //3) pass Pin information and show those photos from that entity WITH PLACEHOLDERS WHILE DOWNLOAD COMPLETES
-            photoSet = self.returnPhotoURLSet(result, completionHandler: { (success, errorString) -> Void in
-                if success {
-                    
+            photoArr = self.returnPhotoURLSet(result, completionHandler: { (success, errorString) -> Void in
+                if !success {
+                    completionHandler(nwData: nil, success: false, errorStr: "failed to get photo data")
+                    return
                 }
             })
-            print("PHOTO URLS : \(photoSet)")
+            completionHandler(nwData: photoArr, success: true, errorStr: nil)
+            
+            print("PHOTO URLS : \(photoArr)")
         }
-        return photoSet
     }
     
     //parse json object from flickr using method flickr.photos.search
@@ -64,8 +66,8 @@ class CmdFlickr {
     */
     //chose to return a set vs an array so that perhaps the 'order doesn't matter' effect will help
     //provide a degree of 'randomness' to the photo list without explicitly adding that functionality
-    func returnPhotoURLSet(jsonObject:AnyObject, completionHandler:(success:Bool, errorString:String?)->Void) -> NSMutableSet {
-        let photoURLSet = NSMutableSet()
+    func returnPhotoURLSet(jsonObject:AnyObject, completionHandler:(success:Bool, errorString:String?)->Void) -> NSMutableArray {
+        let photoURLSet = NSMutableArray()
         let jsonData = jsonObject as! NSDictionary
         if let jsonPhotos = jsonData.valueForKey("photos") as? [String:AnyObject] {
             if let jsonPhotoArr = jsonPhotos["photo"] as? [[String:AnyObject]] {
