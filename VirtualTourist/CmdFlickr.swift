@@ -12,6 +12,8 @@ class CmdFlickr {
     let nw = NWFlickr()
     
     //add lat/long for parameters
+    //add completionHandler to account for asynchronous network data return so that
+    //will wait for network return without using notifier
     func getPhotosForLocation(latitude: Double, longitude: Double)-> NSMutableSet {
         var photoSet = NSMutableSet()
         let location = [

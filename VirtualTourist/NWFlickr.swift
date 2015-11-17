@@ -20,7 +20,8 @@ class NWFlickr : NSObject {
         Keys.apiKey:Base.apiKey,
         Keys.dataFormat:Base.format,
         Keys.nojsoncallback:Base.jsoncallback,
-        Keys.extras:"url_m"
+        Keys.extras:"url_m",
+        Keys.resultsPerPage:"55"
     ]
     
     override init() {

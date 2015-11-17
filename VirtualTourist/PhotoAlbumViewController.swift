@@ -49,13 +49,14 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return photos.count
+        //return photos.count
+        return 55
     }
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("photoCell", forIndexPath: indexPath) as! PhotoCollectionCell
         
         //now attach real information from my data to the cell
-        let pic = photos[indexPath.item]
+        //let pic = photos[indexPath.item]
         
         let testPhoto = NSURL(string: "https://farm6.staticflickr.com/5721/22748359762_17bffd5352.jpg")
         let collPhoto = NSData(contentsOfURL: testPhoto!)

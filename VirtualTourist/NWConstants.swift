@@ -32,5 +32,7 @@ extension NWFlickr {
         static let errorStatusMessage = "message"
         static let dataFormat = "format"
         static let nojsoncallback = "nojsoncallback"
+        static let page = "page"
+        static let resultsPerPage = "per_page"
     }
 }

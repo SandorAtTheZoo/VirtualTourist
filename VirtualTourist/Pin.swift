@@ -11,10 +11,7 @@ import CoreData
 import MapKit
 
 class Pin : NSManagedObject {
-    //used for network calls
-    struct Keys {
-        static let bbox = "bbox"
-    }
+    
     //used for core data, pin location derived from MKAnnotationView -> annonation : MKAnnotation -> coordinate : CLCoordinate2D
 
     
