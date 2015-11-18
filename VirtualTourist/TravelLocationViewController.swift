@@ -8,6 +8,7 @@
 
 import UIKit
 import MapKit
+import CoreData
 
 class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAlbumViewControllerDelegate {
 
@@ -22,6 +23,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
     
     var longPressRecognizer : UILongPressGestureRecognizer!
     var photoArray = NSMutableArray()
+    var userLocations = [Pin]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,6 +39,12 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    //core data : add MOC reference
+    var sharedContext : NSManagedObjectContext {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        return appDelegate.managedObjectContext
     }
     
     //MARK: ADD GESTURE RECOGNIZER NEXT and attach to mapview
@@ -57,18 +65,43 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
             aPin.coordinate = mapLoc
             self.mapView.addAnnotation(aPin)
             //after pin dropped, automatically fetch photos from flickr
+            //save location pin to core data
+            let locToBeAdded = Pin(latitude: mapLoc.latitude, longitude: mapLoc.longitude, context: sharedContext)
+            self.userLocations.append(locToBeAdded)
+            do {
+                try sharedContext.save()
+            } catch {
+                print ("failed to save MOC for Pin")
+            }
+            
             let getLoc = CmdFlickr()
             //self.photoSet = getLoc.getPhotosForLocation(mapLoc.latitude, longitude: mapLoc.longitude)
             getLoc.getPhotosForLocation(mapLoc.latitude, longitude: mapLoc.longitude, completionHandler: { (nwData, success, errorStr) -> Void in
                 if success {
                     //NEED THE IF/LET TO PERFORM THE CAST
                     if let newArr = nwData {
-                        self.photoArray.addObjectsFromArray(newArr as [AnyObject])
+                        //self.photoArray.addObjectsFromArray(newArr as [AnyObject])
+                        //now add each photo from the array in to the entity Photo and
+                        //link that photo to a given Pin location
+                        for pic in newArr {
+                            let newPic = Photo(photoURL: pic as! String, context: self.sharedContext)
+                            newPic.pin = locToBeAdded
+                        }
+                        //save context
+                        do {
+                            try self.sharedContext.save()
+                        } catch {
+                            print ("failed to save MOC for Photo")
+                        }
                     }
                     print("PHOTOSQ!!!!! : \(self.photoArray)")
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         self.performSegueWithIdentifier("ToPhotoSegue", sender: self)
                     })
+                    //MARK: TODO
+                    //while the next view is loading, start downloading all photos and save in core data
+                    
+                    
                 } else {
                     print("failed to get photos from locationViewController")
                 }
@@ -147,7 +180,9 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
                         self.photoArray.addObjectsFromArray(newArr as [AnyObject])
                     }
                     print("PHOTO_PIN MOVED!!!!! : \(self.photoArray)")
-                    self.performSegueWithIdentifier("ToPhotoSegue", sender: self)
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        self.performSegueWithIdentifier("ToPhotoSegue", sender: self)
+                    })
                 } else {
                     print("failed to get photos from locationViewController")
                 }

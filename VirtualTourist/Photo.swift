@@ -10,10 +10,18 @@ import UIKit
 import CoreData
 
 class Photo : NSManagedObject {
-    struct Keys {
-        static let id = "id"
-        static let title = "title"
-        static let url = "url_m"
+
+    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    }
+    
+    init(photoURL : String, context : NSManagedObjectContext) {
+        let entity = NSEntityDescription.entityForName("Photo", inManagedObjectContext: context)!
+        
+        super.init(entity: entity, insertIntoManagedObjectContext: context)
+        
+        //now update data :
+        self.url = photoURL
     }
 
 }
