@@ -25,7 +25,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
     var photoArray = NSMutableArray()
     var userLocations = [Pin]()
     //MARK: ERASE THIS!  Temporary until segue confirmed working
-    var tempID : Pin?
+    var selectedID : String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +35,9 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
         longPressRecognizer.minimumPressDuration = CFTimeInterval(1.0)  //default 0.5 sec, but just to demo option
         //now add gesture recognizer to view
         self.view.addGestureRecognizer(longPressRecognizer)
-        //don't forget to set delegates in storyboard (both)
+
+        //parse pins as annotations to populate map
+        self.updateMap()
     }
 
     override func didReceiveMemoryWarning() {
@@ -47,6 +49,31 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
     var sharedContext : NSManagedObjectContext {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         return appDelegate.managedObjectContext
+    }
+    
+    func fetchAllPins() -> [Pin] {
+        let fetchRequest = NSFetchRequest(entityName: "Pin")
+        
+        do {
+            return try sharedContext.executeFetchRequest(fetchRequest) as! [Pin]
+        } catch let error as NSError {
+            print("Error in fetchAllPins \(error)")
+            return [Pin]()
+        }
+    }
+    
+    //update map with old pins on app launch
+    func updateMap() {
+        var annotations = [MyAnnotation]()
+        //now load pins from previous sessions for display
+        userLocations = fetchAllPins()
+        annotations = Location.createAnnosFromPins(userLocations, currMapView: self.mapView)
+        
+        //now update map on GCD thread
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            self.mapView.addAnnotations(annotations)
+        }
+        
     }
     
     //MARK: ADD GESTURE RECOGNIZER NEXT and attach to mapview
@@ -61,16 +88,21 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
             print("long touch detected")
             //place map pin when this is called
             //goal is to keep this function light, and do more in async_dispatch, but if user moves map, need to capture lat/long now
+            //returns CGPoint
             pressLocation = longPressRecognizer.locationInView(self.mapView)
+            //returns CLLocationCoordinate2D
             mapLoc = self.mapView.convertPoint(pressLocation, toCoordinateFromView: self.mapView)
             let aPin = MyAnnotation()
             aPin.coordinate = mapLoc
+            
+            //add annoation to the map...need to update this to many pins, pulled from core data and added on viewDidLoad
             self.mapView.addAnnotation(aPin)
+            
             //after pin dropped, automatically fetch photos from flickr
             //save location pin to core data
             let locToBeAdded = Pin(latitude: mapLoc.latitude, longitude: mapLoc.longitude, context: sharedContext)
             self.userLocations.append(locToBeAdded)
-            tempID = locToBeAdded
+            //tempID = locToBeAdded
             do {
                 try sharedContext.save()
             } catch {
@@ -97,10 +129,16 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
                             print ("failed to save MOC for Photo")
                         }
                     }
-                    print("PHOTOSQ!!!!! : \(self.photoArray)")
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        self.performSegueWithIdentifier("ToPhotoSegue", sender: self)
-                    })
+                    
+                    
+                    
+//                    print("PHOTOSQ!!!!! : \(self.photoArray)")
+//                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+//                        self.performSegueWithIdentifier("ToPhotoSegue", sender: self)
+//                    })
+                    
+                    
+                    
                     //MARK: TODO
                     //while the next view is loading, start downloading all photos and save in core data
                     
@@ -129,7 +167,9 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
             //OLD_WORKING
             //vcDelegate.photoURLs = self.photoArray
             //create and pass annotation id for search
-            vcDelegate.tempNewID = self.tempID
+//            vcDelegate.tempNewID = self.tempID
+            
+            vcDelegate.currID = self.selectedID
             print("going to show photo collection now...add data here")
         }
     }
@@ -196,7 +236,21 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
         }
     }
     
-//MARK: change URL to call your collection of photos
+    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
+        if let lat = view.annotation?.coordinate.latitude {
+            if let long = view.annotation?.coordinate.longitude {
+                selectedID = Location.createID(lat, longitude: long)
+                
+                //now segue to photoView with Pin
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    self.performSegueWithIdentifier("ToPhotoSegue", sender: self)
+                })
+            }
+        }
+        
+    }
+    
+    //MARK: change URL to call your collection of photos
     
     // This delegate method is implemented to respond to taps. It opens the system browser
     // to the URL specified in the annotationViews subtitle property.

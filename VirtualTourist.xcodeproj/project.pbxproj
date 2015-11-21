@@ -25,6 +25,7 @@
 		37CCDE6D1BD45A400066676F /* VirtualTouristUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37CCDE6C1BD45A400066676F /* VirtualTouristUITests.swift */; };
 		37DDCB131BE576D300FFE62E /* MyAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37DDCB121BE576D300FFE62E /* MyAnnotation.swift */; };
 		37DDCB151BE585C600FFE62E /* CmdFlickr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37DDCB141BE585C600FFE62E /* CmdFlickr.swift */; };
+		37E868B61C01083800331743 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E868B51C01083800331743 /* Location.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +70,7 @@
 		37CCDE6E1BD45A400066676F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		37DDCB121BE576D300FFE62E /* MyAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyAnnotation.swift; sourceTree = "<group>"; };
 		37DDCB141BE585C600FFE62E /* CmdFlickr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CmdFlickr.swift; sourceTree = "<group>"; };
+		37E868B51C01083800331743 /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,6 +150,7 @@
 		37CCDE481BD45A3F0066676F /* VirtualTourist */ = {
 			isa = PBXGroup;
 			children = (
+				37E868B41C01082400331743 /* model */,
 				371A64621BEABAD700FF5A5D /* CollectionView */,
 				3726F7091BD52673001CC3BC /* locData */,
 				3726F7081BD5266A001CC3BC /* network */,
@@ -180,6 +183,14 @@
 				37CCDE6E1BD45A400066676F /* Info.plist */,
 			);
 			path = VirtualTouristUITests;
+			sourceTree = "<group>";
+		};
+		37E868B41C01082400331743 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				37E868B51C01083800331743 /* Location.swift */,
+			);
+			name = model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -318,6 +329,7 @@
 				3726F70B1BD5269E001CC3BC /* Pin.swift in Sources */,
 				37CCDE4C1BD45A3F0066676F /* TravelLocationViewController.swift in Sources */,
 				3726F70F1BD55B54001CC3BC /* NWConstants.swift in Sources */,
+				37E868B61C01083800331743 /* Location.swift in Sources */,
 				37A206D51BFB9FF5001FF58A /* Photo+CoreDataProperties.swift in Sources */,
 				37CCDE4A1BD45A3F0066676F /* AppDelegate.swift in Sources */,
 				37DDCB151BE585C600FFE62E /* CmdFlickr.swift in Sources */,

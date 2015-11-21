@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 //worked with 
 //http://stackoverflow.com/questions/24099230/delegates-in-swift
@@ -19,10 +20,10 @@ protocol PhotoAlbumViewControllerDelegate {
 class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
     var delegate : PhotoAlbumViewControllerDelegate! = nil
-    var photos : [Photo] = [Photo]()
     //OLD_WORKING
     //var photoURLs : NSMutableArray? = nil
-    var tempNewID : Pin?
+    var currID : String?
+    var currPin : Pin?
     @IBOutlet weak var collView: UICollectionView!
     
     override func viewDidLoad() {
@@ -30,15 +31,45 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     }
     
     override func viewWillAppear(animated: Bool) {
-        print("passed photos : \(photos)")
         //same deal as table...delegates don't fire (numberOfItemsInSection...and that propagates) because the change in meme array size is
         //not recognized without this call
+        if let id = currID {
+            currPin = self.getCurrPin(id)
+        } else {
+            print("failed to get selected Pin in photo controller")
+        }
+        
         collView.reloadData()
+        
+        //perform fetchRequest with predicate on currID, and return that Pin entity
+        
     }
     
     @IBAction func selectNewLocation(sender: UIBarButtonItem) {
         print("delegate call to return")
         self.delegate?.returnToMap(self)
+    }
+    
+    var sharedContext : NSManagedObjectContext {
+        let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        return delegate.managedObjectContext
+    }
+    
+    func getCurrPin(pinID : String) -> Pin? {
+        //from apple docs 'Predicate Programmingn Guide'
+        let request = NSFetchRequest()
+        let entity = NSEntityDescription.entityForName("Pin", inManagedObjectContext: sharedContext)
+        request.entity = entity
+        
+        let predicate = NSPredicate(format: "id == %@", pinID)
+        request.predicate = predicate
+        do {
+            let pinResult : [Pin] = try sharedContext.executeFetchRequest(request) as! [Pin]
+            return pinResult[0]
+        }catch {
+            print("failed to complete fetch request with predicate")
+            return nil
+        }
     }
     
     //this fixes a glitch where collection view doesn't display content correctly first time
@@ -54,7 +85,7 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         //OLD_WORKING
         //return photoURLs!.count
-        return tempNewID!.photos.count
+        return currPin!.photos.count
     }
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("photoCell", forIndexPath: indexPath) as! PhotoCollectionCell
@@ -62,7 +93,7 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         //now attach real information from my data to the cell
         //OLD_WORKING
         //let pic = photoURLs![indexPath.row] as! String
-        let pic = tempNewID!.photos[indexPath.row].url!
+        let pic = currPin!.photos[indexPath.row].url!
         
         let testPhoto = NSURL(string: pic)
         let collPhoto = NSData(contentsOfURL: testPhoto!)
