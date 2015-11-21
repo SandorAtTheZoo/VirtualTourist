@@ -28,7 +28,16 @@ class Pin : NSManagedObject {
         //now update pin data :
         self.latitude = latitude
         self.longitude = longitude
+        updateID(latitude, longitude: longitude)
     }
-    
+
+    //generate annotation id from current Pin coordinates
+    //this will be used to associate selected annotation with its data when
+    //segueing to the photo view
+    func updateID(latitude : Double, longitude : Double) {
+        self.id = String(format: "%f", latitude)
+        self.id?.appendContentsOf(String(format: "%f", longitude))
+        print("OBBBBBBBBject ID : \(self.id)")
+    }
 }
 

@@ -20,7 +20,9 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     
     var delegate : PhotoAlbumViewControllerDelegate! = nil
     var photos : [Photo] = [Photo]()
-    var photoURLs : NSMutableArray? = nil
+    //OLD_WORKING
+    //var photoURLs : NSMutableArray? = nil
+    var tempNewID : Pin?
     @IBOutlet weak var collView: UICollectionView!
     
     override func viewDidLoad() {
@@ -50,13 +52,17 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return photoURLs!.count
+        //OLD_WORKING
+        //return photoURLs!.count
+        return tempNewID!.photos.count
     }
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("photoCell", forIndexPath: indexPath) as! PhotoCollectionCell
         
         //now attach real information from my data to the cell
-        let pic = photoURLs![indexPath.row] as! String
+        //OLD_WORKING
+        //let pic = photoURLs![indexPath.row] as! String
+        let pic = tempNewID!.photos[indexPath.row].url!
         
         let testPhoto = NSURL(string: pic)
         let collPhoto = NSData(contentsOfURL: testPhoto!)

@@ -24,6 +24,8 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
     var longPressRecognizer : UILongPressGestureRecognizer!
     var photoArray = NSMutableArray()
     var userLocations = [Pin]()
+    //MARK: ERASE THIS!  Temporary until segue confirmed working
+    var tempID : Pin?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,6 +70,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
             //save location pin to core data
             let locToBeAdded = Pin(latitude: mapLoc.latitude, longitude: mapLoc.longitude, context: sharedContext)
             self.userLocations.append(locToBeAdded)
+            tempID = locToBeAdded
             do {
                 try sharedContext.save()
             } catch {
@@ -123,7 +126,10 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
             let destNavCtrlr = segue.destinationViewController as! UINavigationController
             let vcDelegate = destNavCtrlr.topViewController as! PhotoAlbumViewController
             vcDelegate.delegate = self
-            vcDelegate.photoURLs = self.photoArray
+            //OLD_WORKING
+            //vcDelegate.photoURLs = self.photoArray
+            //create and pass annotation id for search
+            vcDelegate.tempNewID = self.tempID
             print("going to show photo collection now...add data here")
         }
     }
