@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import MapKit
 
-class Pin : NSManagedObject {
+class Pin : NSManagedObject, MKMapViewDelegate {
     
     //used for core data, pin location derived from MKAnnotationView -> annonation : MKAnnotation -> coordinate : CLCoordinate2D
     
@@ -28,7 +28,9 @@ class Pin : NSManagedObject {
         //now update pin data :
         self.latitude = latitude
         self.longitude = longitude
-        self.id = Location.createID(latitude, longitude: longitude)
+        
+        //createID function exists as a protocol extension in the project file Location.swift
+        self.id = createID(latitude, longitude: longitude)
     }
 }
 

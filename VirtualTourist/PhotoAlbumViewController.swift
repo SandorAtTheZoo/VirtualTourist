@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import MapKit
 
 //worked with 
 //http://stackoverflow.com/questions/24099230/delegates-in-swift
@@ -17,7 +18,7 @@ protocol PhotoAlbumViewControllerDelegate {
     func returnToMap(controller : PhotoAlbumViewController)
 }
 
-class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, MKMapViewDelegate {
     
     var delegate : PhotoAlbumViewControllerDelegate! = nil
     //OLD_WORKING
@@ -50,27 +51,7 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         self.delegate?.returnToMap(self)
     }
     
-    var sharedContext : NSManagedObjectContext {
-        let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        return delegate.managedObjectContext
-    }
-    
-    func getCurrPin(pinID : String) -> Pin? {
-        //from apple docs 'Predicate Programmingn Guide'
-        let request = NSFetchRequest()
-        let entity = NSEntityDescription.entityForName("Pin", inManagedObjectContext: sharedContext)
-        request.entity = entity
-        
-        let predicate = NSPredicate(format: "id == %@", pinID)
-        request.predicate = predicate
-        do {
-            let pinResult : [Pin] = try sharedContext.executeFetchRequest(request) as! [Pin]
-            return pinResult[0]
-        }catch {
-            print("failed to complete fetch request with predicate")
-            return nil
-        }
-    }
+
     
     //this fixes a glitch where collection view doesn't display content correctly first time
     //(too high in nav bar)...upon navigating away and returning, it worked, but this resolves that

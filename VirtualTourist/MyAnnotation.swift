@@ -12,5 +12,5 @@ class MyAnnotation: NSObject, MKAnnotation {
     var coordinate : CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 2.0, longitude: 0.2)
     var title : String?
     var subtitle : String?
-
+    var color = MKPinAnnotationView.greenPinColor()
 }
