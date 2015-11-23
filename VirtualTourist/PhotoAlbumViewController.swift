@@ -76,9 +76,14 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         //let pic = photoURLs![indexPath.row] as! String
         let pic = currPin!.photos[indexPath.row].url!
         
-        let testPhoto = NSURL(string: pic)
-        let collPhoto = NSData(contentsOfURL: testPhoto!)
-        cell.flickrImage.image = UIImage(data: collPhoto!)
+        //improve transition response while pictures load
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            //get pictures from network
+            let testPhoto = NSURL(string: pic)
+            let collPhoto = NSData(contentsOfURL: testPhoto!)
+            cell.flickrImage.image = UIImage(data: collPhoto!)
+        }
+        
         //update cell with data
         //need to update to core data, but for testing...
         

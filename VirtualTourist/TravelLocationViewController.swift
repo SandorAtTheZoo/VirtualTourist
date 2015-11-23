@@ -20,6 +20,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
     
 
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var inProgress: UIActivityIndicatorView!
     
     var longPressRecognizer : UILongPressGestureRecognizer!
     var photoArray = NSMutableArray()
@@ -104,7 +105,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
             
             //add annotation to the map...need to update this to many pins, pulled from core data and added on viewDidLoad
             self.mapView.addAnnotation(aPin)
-            
+
             //after pin dropped, automatically fetch photos from flickr
             //save location pin to core data
             let locToBeAdded = Pin(latitude: mapLoc.latitude, longitude: mapLoc.longitude, context: sharedContext)
@@ -114,7 +115,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
             } catch {
                 print ("failed to save MOC for Pin")
             }
-            //retrieve photos from this location and save to Pin entity
+            //retrieve photo URLs from this location and save to Pin entity
             self.getNewPhotos(mapLoc.latitude, newLong: mapLoc.longitude, newPin: locToBeAdded)
     
             return
@@ -146,6 +147,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
     
     func returnToMap(controller: PhotoAlbumViewController) {
         print("return function called")
+        self.inProgress.stopAnimating()
         //necessary to return across a navigation view controller, as many others just pop to
         //the top of the view controller stack...not desired result in this case.
         controller.dismissViewControllerAnimated(true, completion: nil)
@@ -159,7 +161,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
                 //NEED THE IF/LET TO PERFORM THE CAST
                 if let newArr = nwData {
                     //now add each photo from the array in to the entity Photo and
-                    //link that photo to a given Pin location
+                    //associate that photo to a given Pin location
                     for pic in newArr {
                         let newPic = Photo(photoURL: pic as! String, context: self.sharedContext)
                         newPic.pin = newPin
@@ -192,7 +194,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
             let myAnnotation = annotation as! MyAnnotation
             pinView?.canShowCallout = false
-            pinView?.animatesDrop = true
+            pinView?.animatesDrop = false
             pinView?.draggable = true
             pinView?.pinTintColor = myAnnotation.color
 
@@ -238,6 +240,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
     }
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
+        self.inProgress.startAnimating()
         if let lat = view.annotation?.coordinate.latitude {
             if let long = view.annotation?.coordinate.longitude {
                 //createID function exists as a protocol extension in the project file Location.swift

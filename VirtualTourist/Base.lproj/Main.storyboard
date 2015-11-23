@@ -24,14 +24,23 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="gMr-da-y0F"/>
                                 </connections>
                             </mapView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="tba-of-G9y">
+                                <rect key="frame" x="282" y="281" width="37" height="37"/>
+                                <animations/>
+                                <color key="color" red="0.58788596323116504" green="0.24075942141338266" blue="0.89019097219999999" alpha="1" colorSpace="calibratedRGB"/>
+                            </activityIndicatorView>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="kot-Lx-5fJ" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="Ot5-cp-cd7"/>
                             <constraint firstItem="kot-Lx-5fJ" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="RlA-Ls-hf8"/>
+                            <constraint firstItem="tba-of-G9y" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="TXQ-WK-G8X"/>
+                            <constraint firstItem="tba-of-G9y" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="ahY-ff-Lxr"/>
                             <constraint firstItem="kot-Lx-5fJ" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="gR1-ox-4RY"/>
+                            <constraint firstItem="tba-of-G9y" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="gSL-Um-bYh"/>
                             <constraint firstItem="kot-Lx-5fJ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="169" id="h3i-ht-BTM"/>
+                            <constraint firstItem="tba-of-G9y" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="ieE-zg-qT3"/>
                             <constraint firstItem="kot-Lx-5fJ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="vBU-cI-4fb"/>
                         </constraints>
                         <variation key="default">
@@ -41,6 +50,7 @@
                         </variation>
                     </view>
                     <connections>
+                        <outlet property="inProgress" destination="tba-of-G9y" id="k6N-Mr-buH"/>
                         <outlet property="mapView" destination="kot-Lx-5fJ" id="sf0-V6-Z2f"/>
                         <segue destination="ETV-yW-Nyq" kind="show" identifier="ToPhotoSegue" id="FeE-S3-WQd"/>
                     </connections>
@@ -109,6 +119,7 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <animations/>
+                                        <color key="backgroundColor" red="0.0" green="0.046865278199999999" blue="0.89019097219999999" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstItem="oNf-C5-AmC" firstAttribute="centerY" secondItem="FC3-oD-8aQ" secondAttribute="centerY" id="4EI-uS-vyM"/>
                                             <constraint firstItem="oNf-C5-AmC" firstAttribute="centerX" secondItem="FC3-oD-8aQ" secondAttribute="centerX" id="81l-aV-IgB"/>
