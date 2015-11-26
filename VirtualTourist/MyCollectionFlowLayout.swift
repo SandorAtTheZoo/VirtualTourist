@@ -9,6 +9,8 @@ import UIKit
 
 //modified slightly from :
 //http://www.raywenderlich.com/78550/beginning-ios-collection-views-swift-part-1
+
+
 extension PhotoAlbumViewController : UICollectionViewDelegateFlowLayout {
     //MARK:TODO : update this when we download the photos into their own array (in Documents folder I guess)
 //    func collectionView(collectionView: UICollectionView,

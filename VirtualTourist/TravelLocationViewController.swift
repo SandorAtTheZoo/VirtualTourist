@@ -172,13 +172,19 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
                     } catch {
                         print ("failed to save MOC for Photo")
                     }
+                    
+                    //while the next view is loading, start downloading all photos and save in core data
+                    //make this a separate thread
+                    //http://www.raywenderlich.com/79149/grand-central-dispatch-tutorial-swift-part-1
+                    //chose QoS utility thread
+                    dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), { () -> Void in
+                        print("local file path : \(SaveHelper.locFilePath)")
+                        for image in newArr {
+                                SaveHelper.savePhotoFromURL(image as! String)
+                        }
+                    })
                 }
-                
-                
-                //MARK: TODO
-                //while the next view is loading, start downloading all photos and save in core data
-                
-                
+ 
             } else {
                 print("failed to get photos from locationViewController")
             }
