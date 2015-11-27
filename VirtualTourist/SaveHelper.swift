@@ -95,4 +95,16 @@ class SaveHelper : NSObject {
         }
     }
     
+    static func deletePhoto(photoURL : String) {
+        let photoName = NSString(string: photoURL).lastPathComponent
+        let locPath = setLocImagePath(photoName).path!
+        if NSFileManager.defaultManager().fileExistsAtPath(locPath) {
+            do {
+            try NSFileManager.defaultManager().removeItemAtPath(locPath)
+            } catch {
+                print("failed to delete photo from Documents directory")
+            }
+        }
+    }
+    
 }

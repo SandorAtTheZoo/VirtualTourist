@@ -26,7 +26,7 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     var currID : String?
     var currPin : Pin?
     @IBOutlet weak var collView: UICollectionView!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -51,7 +51,27 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         self.delegate?.returnToMap(self)
     }
     
-
+    var context : NSManagedObjectContext {
+        return appDelegate.managedObjectContext
+    }
+    
+    var appDelegate : AppDelegate {
+        return UIApplication.sharedApplication().delegate as! AppDelegate
+    }
+    
+    func fetchPhotoToDelete(withURL : String) -> Photo? {
+        let request = NSFetchRequest(entityName: "Photo")
+        request.predicate = NSPredicate(format: "url == %@", withURL)
+        
+        do {
+            //should only ever be one to delete associated with a given pin
+            let results = try context.executeFetchRequest(request) as! [Photo]
+            return results.first!
+        } catch {
+            print("failed to find photo to delete from core data")
+            return nil
+        }
+    }
     
     //this fixes a glitch where collection view doesn't display content correctly first time
     //(too high in nav bar)...upon navigating away and returning, it worked, but this resolves that
@@ -76,21 +96,34 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         //let pic = photoURLs![indexPath.row] as! String
         let pic = currPin!.photos[indexPath.row].url!
         
-//        //improve transition response while pictures load
-//        dispatch_async(dispatch_get_main_queue()) { () -> Void in
-//            //get pictures from network
-//            let testPhoto = NSURL(string: pic)
-//            let collPhoto = NSData(contentsOfURL: testPhoto!)
-//            cell.flickrImage.image = UIImage(data: collPhoto!)
-//        }
         print("collection cell image : \(pic)")
         //populate collection from photos that have been downloaded
         cell.flickrImage.image = SaveHelper.loadSavedPhoto(pic)
         
         
-        //update cell with data
-        //need to update to core data, but for testing...
-        
         return cell
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        //get url of pic from core data
+        let pic = currPin!.photos[indexPath.row].url!
+        
+        //delete pic from Documents directory
+        SaveHelper.deletePhoto(pic)
+        
+        //now delete Photo from core data, and it should propogate
+        //run fetch request to find the object to delete based on pin?
+        if let photoToDelete = fetchPhotoToDelete(pic) {
+            context.deleteObject(photoToDelete)
+            do {
+            try context.save()
+            } catch {
+                print("failed to save context")
+            }
+        }
+        
+        //refresh the collection view
+        collView.reloadData()
+        
     }
 }

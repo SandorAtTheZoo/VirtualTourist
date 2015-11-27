@@ -203,8 +203,6 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
             pinView?.animatesDrop = false
             pinView?.draggable = true
             pinView?.pinTintColor = myAnnotation.color
-
-            //pinView!.rightCalloutAccessoryView = UIButton(type: UIButtonType.DetailDisclosure)
         }
         return pinView
         
