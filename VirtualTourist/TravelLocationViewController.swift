@@ -37,6 +37,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
         //now add gesture recognizer to view
         self.view.addGestureRecognizer(longPressRecognizer)
         
+        //restore user map view settings from last session after a pin was selected
         initMapView()
     }
     
@@ -84,7 +85,6 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
             self.mapView.removeAnnotations(self.mapView.annotations)
             self.mapView.addAnnotations(annotations)
         }
-        
     }
     
     //MARK: ADD GESTURE RECOGNIZER NEXT and attach to mapview
@@ -159,13 +159,17 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
         let reuseID = "myPin"
         
         var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID) as? MKPinAnnotationView
+        let myAnnotation = annotation as! MyAnnotation
         
         if (pinView == nil) {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
-            let myAnnotation = annotation as! MyAnnotation
             pinView?.canShowCallout = false
             pinView?.animatesDrop = false
             pinView?.draggable = true
+            pinView?.pinTintColor = myAnnotation.color
+        } else {
+            //need the else to change pin color because if not, when check for nil on viewWillAppear from another view (for instance)
+            //none of the annotations are nil, as they exist!  so it never updated the color to indicate that there were no photos present for that pin
             pinView?.pinTintColor = myAnnotation.color
         }
         return pinView
@@ -201,8 +205,8 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
                 }
                 SaveHelper.getNewPhotos(lat, newLong: long, newPin: locToBeAdded)
                 
-                //now delete old pin
-                let oldPinLoc = getCurrPin(createID(lat, longitude: long))
+//                //now delete old pin
+//                let oldPinLoc = getCurrPin(createID(lat, longitude: long))
             }
         }
     }

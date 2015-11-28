@@ -47,6 +47,8 @@ extension MKMapViewDelegate {
                     //change pin color based on if there are any photos in that location
                     if item.photos.count == 0 {
                         myAnno.color = MKPinAnnotationView.redPinColor()
+                    } else {
+                        myAnno.color = MKPinAnnotationView.greenPinColor()
                     }
                     annos.append(myAnno)
                 }

@@ -25,7 +25,7 @@
                                 </connections>
                             </mapView>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="tba-of-G9y">
-                                <rect key="frame" x="1" y="-1" width="600" height="601"/>
+                                <rect key="frame" x="0.0" y="-1" width="600" height="601"/>
                                 <animations/>
                                 <color key="color" red="0.58788596323116504" green="0.24075942141338266" blue="0.89019097219999999" alpha="1" colorSpace="calibratedRGB"/>
                             </activityIndicatorView>
@@ -88,6 +88,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No photos available" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aWn-r5-gaP">
+                                <rect key="frame" x="195" y="234" width="211" height="29"/>
+                                <animations/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="dOP-gB-VA1">
                                 <rect key="frame" x="20" y="214" width="560" height="356"/>
                                 <animations/>
@@ -100,19 +108,15 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="photoCell" id="FC3-oD-8aQ" customClass="PhotoCollectionCell" customModule="VirtualTourist" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="64" width="116" height="108"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="116" height="108"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="116" height="108"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="oNf-C5-AmC">
-                                                    <rect key="frame" x="23" y="19" width="70" height="70"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="116" height="108"/>
                                                     <animations/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="70" id="HmB-qf-soP"/>
-                                                        <constraint firstAttribute="height" constant="70" id="Ui5-hF-Bj4"/>
-                                                    </constraints>
                                                 </imageView>
                                             </subviews>
                                             <animations/>
@@ -123,6 +127,8 @@
                                         <constraints>
                                             <constraint firstItem="oNf-C5-AmC" firstAttribute="centerY" secondItem="FC3-oD-8aQ" secondAttribute="centerY" id="4EI-uS-vyM"/>
                                             <constraint firstItem="oNf-C5-AmC" firstAttribute="centerX" secondItem="FC3-oD-8aQ" secondAttribute="centerX" id="81l-aV-IgB"/>
+                                            <constraint firstAttribute="width" secondItem="oNf-C5-AmC" secondAttribute="width" id="XWs-vt-Sbb"/>
+                                            <constraint firstAttribute="height" secondItem="oNf-C5-AmC" secondAttribute="height" id="dXL-xr-uf5"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="flickrImage" destination="oNf-C5-AmC" id="4mF-wn-iNv"/>
@@ -165,25 +171,15 @@
                             <constraint firstAttribute="trailingMargin" secondItem="dOP-gB-VA1" secondAttribute="trailing" id="Ddk-tV-jIF"/>
                             <constraint firstItem="dOP-gB-VA1" firstAttribute="top" secondItem="inv-sm-oms" secondAttribute="bottom" id="Fu5-91-ww5"/>
                             <constraint firstItem="dOP-gB-VA1" firstAttribute="leading" secondItem="cGq-Ur-KQR" secondAttribute="leadingMargin" id="KyG-gx-57H"/>
-                            <constraint firstItem="bkf-AA-bbH" firstAttribute="top" secondItem="dOP-gB-VA1" secondAttribute="bottom" id="NEo-iX-JV1"/>
                             <constraint firstItem="inv-sm-oms" firstAttribute="leading" secondItem="cGq-Ur-KQR" secondAttribute="leadingMargin" id="WB8-h4-jIc"/>
                             <constraint firstItem="bkf-AA-bbH" firstAttribute="top" secondItem="dOP-gB-VA1" secondAttribute="bottom" id="Y4B-qd-3OO"/>
-                            <constraint firstItem="Qvb-Ee-u6g" firstAttribute="top" secondItem="dOP-gB-VA1" secondAttribute="bottom" id="cHi-UZ-hD3"/>
                             <constraint firstItem="inv-sm-oms" firstAttribute="top" secondItem="1K6-Yk-qtF" secondAttribute="bottom" id="fGk-rV-D9S"/>
                             <constraint firstAttribute="trailingMargin" secondItem="inv-sm-oms" secondAttribute="trailing" id="gOq-WU-QkW"/>
                             <constraint firstItem="bkf-AA-bbH" firstAttribute="width" secondItem="cGq-Ur-KQR" secondAttribute="width" id="hYT-oF-oUn"/>
-                            <constraint firstItem="bkf-AA-bbH" firstAttribute="centerY" secondItem="cGq-Ur-KQR" secondAttribute="centerY" id="iiw-Sh-Yfg"/>
+                            <constraint firstItem="aWn-r5-gaP" firstAttribute="centerX" secondItem="cGq-Ur-KQR" secondAttribute="centerX" id="idk-mt-0cK"/>
+                            <constraint firstItem="aWn-r5-gaP" firstAttribute="top" secondItem="inv-sm-oms" secondAttribute="bottom" constant="20" id="rFa-vk-jn5"/>
                             <constraint firstItem="Qvb-Ee-u6g" firstAttribute="top" secondItem="bkf-AA-bbH" secondAttribute="bottom" id="toZ-DX-Zuk"/>
-                            <constraint firstItem="bkf-AA-bbH" firstAttribute="leading" secondItem="cGq-Ur-KQR" secondAttribute="leadingMargin" id="vfa-yj-zSY"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="NEo-iX-JV1"/>
-                                <exclude reference="iiw-Sh-Yfg"/>
-                                <exclude reference="vfa-yj-zSY"/>
-                                <exclude reference="cHi-UZ-hD3"/>
-                            </mask>
-                        </variation>
                     </view>
                     <navigationItem key="navigationItem" id="eBx-sC-wNL">
                         <barButtonItem key="leftBarButtonItem" title="OK" id="czt-7t-2gu">
@@ -196,6 +192,7 @@
                         <outlet property="collView" destination="dOP-gB-VA1" id="mVU-G4-pxx"/>
                         <outlet property="getNewCollButt" destination="bkf-AA-bbH" id="Xm0-9t-ZOs"/>
                         <outlet property="mapView" destination="inv-sm-oms" id="M8T-QC-oLD"/>
+                        <outlet property="noPhotosAvailable" destination="aWn-r5-gaP" id="7yb-OU-lxy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j9u-Ja-N1c" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -29,6 +29,7 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     @IBOutlet weak var collView: UICollectionView!
     @IBOutlet weak var getNewCollButt: UIButton!
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var noPhotosAvailable: UILabel!
 
     var context : NSManagedObjectContext {
         return appDelegate.managedObjectContext
@@ -53,6 +54,7 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         } else {
             print("failed to get selected Pin in photo controller")
         }
+        
         //start notification listener
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateDisplay", name: "updatePhotoCollection", object: nil)
         updateDisplay()
@@ -117,16 +119,6 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         }
     }
     
-//    //this fixes a glitch where collection view doesn't display content correctly first time
-//    //(too high in nav bar)...upon navigating away and returning, it worked, but this resolves that
-//    //http://stackoverflow.com/questions/18896210/ios7-uicollectionview-appearing-under-uinavigationbar
-//    override func viewDidLayoutSubviews() {
-//        let top = self.topLayoutGuide.length
-//        let bottom = self.bottomLayoutGuide.length
-//        let newInsets = UIEdgeInsetsMake(top, 0, bottom, 0)
-//        self.collView.contentInset = newInsets
-//    }
-    
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return currPin!.photos.count
     }
@@ -170,6 +162,17 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     func updateDisplay() {
         //run the update in GCD main thread to avoid delays
         dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            //either show collection or show no photos
+            //placed this hide/show call in the update dispatch, because this is called by notifier rather than something like viewWillAppear
+            //which means that when I delete all the photos by hand and then call 'newCollection', I'm not left seeing 'no photos available'
+            //and the collection should not only refresh, but also unhide on notification
+            if self.currPin?.photos.count > 0 {
+                self.collView.hidden = false
+                self.noPhotosAvailable.hidden = true
+            } else {
+                self.collView.hidden = true
+                self.noPhotosAvailable.hidden = false
+            }
             self.collView.reloadData()
         }
     }
