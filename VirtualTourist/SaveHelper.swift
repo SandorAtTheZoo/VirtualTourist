@@ -130,6 +130,10 @@ class SaveHelper : NSObject {
                     //save context
                     do {
                         try self.sharedContext.save()
+                        //notify after context saved (URLs) to update collection view
+                        NSNotificationCenter.defaultCenter().postNotificationName("updatePhotoCollection", object: self)
+                        
+                        
                     } catch {
                         print ("failed to save MOC for Photo")
                     }
@@ -142,6 +146,10 @@ class SaveHelper : NSObject {
                         print("local file path : \(SaveHelper.locFilePath)")
                         for image in newArr {
                             SaveHelper.savePhotoFromURL(image as! String)
+                            //after each save, notify that a new photo exists to update collection
+                            NSNotificationCenter.defaultCenter().postNotificationName("updatePhotoCollection", object: self)
+                            
+                            
                         }
                     })
                 }

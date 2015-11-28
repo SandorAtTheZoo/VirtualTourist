@@ -47,11 +47,16 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         } else {
             print("failed to get selected Pin in photo controller")
         }
-        
-        collView.reloadData()
+        //start notification listener
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateDisplay", name: "updatePhotoCollection", object: nil)
+        updateDisplay()
         
         //perform fetchRequest with predicate on currID, and return that Pin entity
         
+    }
+
+    override func viewWillDisappear(animated: Bool) {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     @IBAction func selectNewLocation(sender: UIBarButtonItem) {
@@ -64,8 +69,6 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         var count = 0
         for _ in (currPin?.photos)! {
             print("deleting : \(count)")
-//            let photoToDelete = currPin?.photos[count]
-//            context.deleteObject(photoToDelete!)
             deletePhoto(count)
             count++
         }
@@ -76,7 +79,6 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
             print("failed to save context")
         }
         print("CURRRRRRR : \(currPin?.photos.count)")
-        collView.reloadData()
         SaveHelper.getNewPhotos(Double(currPin!.latitude!), newLong: Double(currPin!.longitude!), newPin: currPin!)
         //save context, refresh collection
         do {
@@ -84,8 +86,10 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         } catch {
             print("failed to save context")
         }
+        //collection should be updated here, but threads to get URLs and save photos to documents directory haven't returned yet
+        //so add notifier to call updateDisplay() when network and I/O threads return
+
         print("CURRRR333333333333RRR : \(currPin?.photos.count)")
-        collView.reloadData()
     }
     
     func fetchPhotoToDelete(withURL : String) -> Photo? {
@@ -154,6 +158,12 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         SaveHelper.deletePhoto(pic)
         
         //refresh the collection view
-        collView.reloadData()
+        updateDisplay()
+    }
+    
+    func updateDisplay() {
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            self.collView.reloadData()
+        }
     }
 }
