@@ -25,8 +25,10 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     //var photoURLs : NSMutableArray? = nil
     var currID : String?
     var currPin : Pin?
+    
     @IBOutlet weak var collView: UICollectionView!
     @IBOutlet weak var getNewCollButt: UIButton!
+    @IBOutlet weak var mapView: MKMapView!
 
     var context : NSManagedObjectContext {
         return appDelegate.managedObjectContext
@@ -55,6 +57,8 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateDisplay", name: "updatePhotoCollection", object: nil)
         updateDisplay()
         
+        //update map location centered on the annotation
+        mapView.region = updateMap()
     }
 
     override func viewWillDisappear(animated: Bool) {
@@ -182,5 +186,34 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         dispatch_async(dispatch_get_main_queue()) { () -> Void in
             self.getNewCollButt.enabled = true
         }
+    }
+    
+    func updateMap()->MKCoordinateRegion{
+        //update map region based on pin selected
+        var mapRegion = MKCoordinateRegion()
+        var center = CLLocationCoordinate2D()
+        let lat : Double = currPin?.latitude as! Double
+        let long : Double = currPin?.longitude as! Double
+        center.latitude = lat
+        center.longitude = long
+        let span = MKCoordinateSpan(latitudeDelta: abs(lat/50), longitudeDelta: abs(long/50))
+        mapRegion.center = center
+        mapRegion.span = span
+        
+        //now add pin annotation to that map region
+        var annotations = [MyAnnotation]()
+        
+        //createAnnosFromPins function exists as a protocol extension in the project file Location.swift
+        annotations = createAnnosFromPins([currPin!], currMapView: self.mapView)
+        print("number of annotations : \(annotations.count)")
+        
+        //now update map on GCD thread
+        //NEED TO REMOVE self.mapview.annotations so that you don't get shadows...just 'annotations' there isn't enough
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            self.mapView.removeAnnotations(self.mapView.annotations)
+            self.mapView.addAnnotations(annotations)
+        }
+        
+        return mapRegion
     }
 }

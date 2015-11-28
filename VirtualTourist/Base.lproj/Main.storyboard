@@ -195,6 +195,7 @@
                     <connections>
                         <outlet property="collView" destination="dOP-gB-VA1" id="mVU-G4-pxx"/>
                         <outlet property="getNewCollButt" destination="bkf-AA-bbH" id="Xm0-9t-ZOs"/>
+                        <outlet property="mapView" destination="inv-sm-oms" id="M8T-QC-oLD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j9u-Ja-N1c" userLabel="First Responder" sceneMemberID="firstResponder"/>
