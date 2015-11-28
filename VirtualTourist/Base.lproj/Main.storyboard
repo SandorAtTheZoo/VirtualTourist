@@ -145,6 +145,9 @@
                                     <constraint firstAttribute="height" constant="30" id="laC-wb-PW1"/>
                                 </constraints>
                                 <state key="normal" title="New Collection"/>
+                                <connections>
+                                    <action selector="getNewCollection:" destination="xgZ-oJ-nEp" eventType="touchUpInside" id="vdu-KK-wTX"/>
+                                </connections>
                             </button>
                         </subviews>
                         <animations/>

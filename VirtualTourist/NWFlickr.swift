@@ -12,7 +12,7 @@ class NWFlickr : NSObject {
     //will contain all network access functions to interface to Flickr
     
     //as I see it, creates a pointer for data result and errors that can be passed into a closure so results can bubble up without adding parameters to the network function
-    typealias CompletionHandler = (result: AnyObject!, error: NSError?) -> Void
+    typealias CompletionHandler = (result: AnyObject!, success : Bool, error: NSError?) -> Void
     
     var session : NSURLSession
     
@@ -20,7 +20,6 @@ class NWFlickr : NSObject {
         Keys.apiKey:Base.apiKey,
         Keys.dataFormat:Base.format,
         Keys.nojsoncallback:Base.jsoncallback,
-        Keys.extras:"url_m",
         Keys.resultsPerPage:"55"
     ]
     
@@ -48,7 +47,7 @@ class NWFlickr : NSObject {
         let task = session.dataTaskWithRequest(request) { data, response, downloadError in
             if let error = downloadError {
                 let newError = NWFlickr.errorForData(data, response: response, error: error)
-                completionHandler(result: nil, error: newError)
+                completionHandler(result: nil, success : false, error: newError)
             } else {
                 print("got response from Flickr query SAT")
                 NWFlickr.parseJSONWithCompletionHandler(data!, completionHandler: completionHandler)
@@ -124,10 +123,10 @@ class NWFlickr : NSObject {
         }
         
         if let error = parsingError {
-            completionHandler(result: nil, error: error)
+            completionHandler(result: nil, success:false, error: error)
         } else {
             print("Step 4 - parseJSONWithCompletionHandler is invoked.")
-            completionHandler(result: parsedResult, error: nil)
+            completionHandler(result: parsedResult, success:true, error: nil)
         }
         //there is no return because the data is passed in from the session closure, and the completion handler 'result' parameter returns the well, JSON result
     }

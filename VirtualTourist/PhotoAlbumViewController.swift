@@ -50,6 +50,9 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         print("delegate call to return")
         self.delegate?.returnToMap(self)
     }
+    @IBAction func getNewCollection(sender: UIButton) {
+        
+    }
     
     var context : NSManagedObjectContext {
         return appDelegate.managedObjectContext
@@ -96,7 +99,6 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         //let pic = photoURLs![indexPath.row] as! String
         let pic = currPin!.photos[indexPath.row].url!
         
-        print("collection cell image : \(pic)")
         //populate collection from photos that have been downloaded
         cell.flickrImage.image = SaveHelper.loadSavedPhoto(pic)
         
