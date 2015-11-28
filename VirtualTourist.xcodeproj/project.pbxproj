@@ -28,6 +28,7 @@
 		37DDCB131BE576D300FFE62E /* MyAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37DDCB121BE576D300FFE62E /* MyAnnotation.swift */; };
 		37DDCB151BE585C600FFE62E /* CmdFlickr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37DDCB141BE585C600FFE62E /* CmdFlickr.swift */; };
 		37E868B61C01083800331743 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E868B51C01083800331743 /* Location.swift */; };
+		37F4E8C21C0A475F00B1751B /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37F4E8C11C0A475F00B1751B /* UserSettings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,7 @@
 		37DDCB121BE576D300FFE62E /* MyAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyAnnotation.swift; sourceTree = "<group>"; };
 		37DDCB141BE585C600FFE62E /* CmdFlickr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CmdFlickr.swift; sourceTree = "<group>"; };
 		37E868B51C01083800331743 /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		37F4E8C11C0A475F00B1751B /* UserSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -182,6 +184,7 @@
 				37CCDE531BD45A3F0066676F /* Assets.xcassets */,
 				37CCDE551BD45A3F0066676F /* LaunchScreen.storyboard */,
 				37CCDE581BD45A3F0066676F /* Info.plist */,
+				37F4E8C11C0A475F00B1751B /* UserSettings.swift */,
 			);
 			path = VirtualTourist;
 			sourceTree = "<group>";
@@ -362,6 +365,7 @@
 				37CCDE521BD45A3F0066676F /* VirtualTourist.xcdatamodeld in Sources */,
 				37C2DA851C029D0B0038AA20 /* MyCollectionFlowLayout.swift in Sources */,
 				3726F7071BD5229F001CC3BC /* PhotoAlbumViewController.swift in Sources */,
+				37F4E8C21C0A475F00B1751B /* UserSettings.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

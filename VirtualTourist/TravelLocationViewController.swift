@@ -26,6 +26,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
     var photoArray = NSMutableArray()
     var userLocations = [Pin]()
     var selectedID : String?
+    var mapDefaults : UserSettings?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +36,8 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
         longPressRecognizer.minimumPressDuration = CFTimeInterval(1.0)  //default 0.5 sec, but just to demo option
         //now add gesture recognizer to view
         self.view.addGestureRecognizer(longPressRecognizer)
+        
+        initMapView()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -140,6 +143,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
             
             vcDelegate.currID = self.selectedID
             print("going to show photo collection now...add data here")
+            getAndSaveCurrMapView()
         }
     }
     
@@ -228,6 +232,18 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
                 }
             }
         }
+        
+    }
+    
+    func initMapView() {
+        if let mapRect = UserSettings.loadMapRect() {
+            mapView.setVisibleMapRect(mapRect, animated: true)
+        }
+    }
+    
+    func getAndSaveCurrMapView() {
+        let us = UserSettings(currMapRect: mapView.visibleMapRect, currMapCoords: mapView.centerCoordinate)
+        us.saveMapDefaults()
         
     }
 
