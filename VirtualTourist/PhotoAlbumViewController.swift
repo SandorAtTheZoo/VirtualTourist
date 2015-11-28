@@ -27,6 +27,14 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     var currPin : Pin?
     @IBOutlet weak var collView: UICollectionView!
 
+    var context : NSManagedObjectContext {
+        return appDelegate.managedObjectContext
+    }
+    
+    var appDelegate : AppDelegate {
+        return UIApplication.sharedApplication().delegate as! AppDelegate
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -51,15 +59,33 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         self.delegate?.returnToMap(self)
     }
     @IBAction func getNewCollection(sender: UIButton) {
-        
-    }
-    
-    var context : NSManagedObjectContext {
-        return appDelegate.managedObjectContext
-    }
-    
-    var appDelegate : AppDelegate {
-        return UIApplication.sharedApplication().delegate as! AppDelegate
+        //remove all previous photos
+        print("NUM OF PHOTOS TO DELETE \(currPin?.photos.count)")
+        var count = 0
+        for _ in (currPin?.photos)! {
+            print("deleting : \(count)")
+//            let photoToDelete = currPin?.photos[count]
+//            context.deleteObject(photoToDelete!)
+            deletePhoto(count)
+            count++
+        }
+        //save context, refresh collection
+        do {
+            try context.save()
+        } catch {
+            print("failed to save context")
+        }
+        print("CURRRRRRR : \(currPin?.photos.count)")
+        collView.reloadData()
+        SaveHelper.getNewPhotos(Double(currPin!.latitude!), newLong: Double(currPin!.longitude!), newPin: currPin!)
+        //save context, refresh collection
+        do {
+            try context.save()
+        } catch {
+            print("failed to save context")
+        }
+        print("CURRRR333333333333RRR : \(currPin?.photos.count)")
+        collView.reloadData()
     }
     
     func fetchPhotoToDelete(withURL : String) -> Photo? {
@@ -68,8 +94,11 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         
         do {
             //should only ever be one to delete associated with a given pin
-            let results = try context.executeFetchRequest(request) as! [Photo]
-            return results.first!
+            if let results = try context.executeFetchRequest(request) as? [Photo] {
+                return results.first!
+            } else {
+                return nil
+            }
         } catch {
             print("failed to find photo to delete from core data")
             return nil
@@ -94,9 +123,6 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("photoCell", forIndexPath: indexPath) as! PhotoCollectionCell
         
-        //now attach real information from my data to the cell
-        //OLD_WORKING
-        //let pic = photoURLs![indexPath.row] as! String
         let pic = currPin!.photos[indexPath.row].url!
         
         //populate collection from photos that have been downloaded
@@ -107,25 +133,27 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        //deletePhoto(indexPath.row)
+        deletePhoto(indexPath.row)
+        //save context
+        do {
+            try context.save()
+        } catch {
+            print("failed to save context")
+        }
+    }
+    
+    func deletePhoto(idx : Int) {
         //get url of pic from core data
-        let pic = currPin!.photos[indexPath.row].url!
+        let pic = currPin!.photos[idx].url!
+
+        let photoToDelete = currPin?.photos[idx]
+        context.deleteObject(photoToDelete!)
         
         //delete pic from Documents directory
         SaveHelper.deletePhoto(pic)
         
-        //now delete Photo from core data, and it should propogate
-        //run fetch request to find the object to delete based on pin?
-        if let photoToDelete = fetchPhotoToDelete(pic) {
-            context.deleteObject(photoToDelete)
-            do {
-            try context.save()
-            } catch {
-                print("failed to save context")
-            }
-        }
-        
         //refresh the collection view
         collView.reloadData()
-        
     }
 }

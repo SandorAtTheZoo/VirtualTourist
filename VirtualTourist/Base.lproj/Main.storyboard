@@ -24,8 +24,8 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="gMr-da-y0F"/>
                                 </connections>
                             </mapView>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="tba-of-G9y">
-                                <rect key="frame" x="282" y="281" width="37" height="37"/>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="tba-of-G9y">
+                                <rect key="frame" x="0.5" y="-0.5" width="600" height="600"/>
                                 <animations/>
                                 <color key="color" red="0.58788596323116504" green="0.24075942141338266" blue="0.89019097219999999" alpha="1" colorSpace="calibratedRGB"/>
                             </activityIndicatorView>

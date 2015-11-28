@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 //http://stackoverflow.com/questions/30633408/where-to-put-reusable-functions-in-ios-swift
 //require functions specific to saving and getting files/photos
@@ -14,6 +15,12 @@ import UIKit
 //2.  display where your save path is in the simulator
 
 class SaveHelper : NSObject {
+    
+    //core data : add MOC reference
+    static var sharedContext : NSManagedObjectContext {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        return appDelegate.managedObjectContext
+    }
     
     //download image from URL and return UIImage
     //recommend running this in background thread
@@ -107,6 +114,42 @@ class SaveHelper : NSObject {
         }
     }
     
-    
+    static func getNewPhotos(newLat: Double, newLong: Double, newPin : Pin) {
+        let getLoc = CmdFlickr()
+
+        getLoc.getPhotosForLocation(newLat, longitude: newLong, completionHandler: { (nwData, success, errorStr) -> Void in
+            if success {
+                //NEED THE IF/LET TO PERFORM THE CAST
+                if let newArr = nwData {
+                    //now add each photo from the array in to the entity Photo and
+                    //associate that photo to a given Pin location
+                    for pic in newArr {
+                        let newPic = Photo(photoURL: pic as! String, context: self.sharedContext)
+                        newPic.pin = newPin
+                    }
+                    //save context
+                    do {
+                        try self.sharedContext.save()
+                    } catch {
+                        print ("failed to save MOC for Photo")
+                    }
+                    
+                    //while the next view is loading, start downloading all photos and save in core data
+                    //make this a separate thread
+                    //http://www.raywenderlich.com/79149/grand-central-dispatch-tutorial-swift-part-1
+                    //chose QoS utility thread
+                    dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), { () -> Void in
+                        print("local file path : \(SaveHelper.locFilePath)")
+                        for image in newArr {
+                            SaveHelper.savePhotoFromURL(image as! String)
+                        }
+                    })
+                }
+                
+            } else {
+                print("failed to get photos from locationViewController")
+            }
+        })
+    }
     
 }

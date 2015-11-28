@@ -116,7 +116,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
                 print ("failed to save MOC for Pin")
             }
             //retrieve photo URLs from this location and save to Pin entity
-            self.getNewPhotos(mapLoc.latitude, newLong: mapLoc.longitude, newPin: locToBeAdded)
+            SaveHelper.getNewPhotos(mapLoc.latitude, newLong: mapLoc.longitude, newPin: locToBeAdded)
     
             return
         case .Ended:
@@ -135,10 +135,6 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
             let destNavCtrlr = segue.destinationViewController as! UINavigationController
             let vcDelegate = destNavCtrlr.topViewController as! PhotoAlbumViewController
             vcDelegate.delegate = self
-            //OLD_WORKING
-            //vcDelegate.photoURLs = self.photoArray
-            //create and pass annotation id for search
-//            vcDelegate.tempNewID = self.tempID
             
             vcDelegate.currID = self.selectedID
             print("going to show photo collection now...add data here")
@@ -151,44 +147,6 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
         //necessary to return across a navigation view controller, as many others just pop to
         //the top of the view controller stack...not desired result in this case.
         controller.dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    func getNewPhotos(newLat: Double, newLong: Double, newPin : Pin) {
-        let getLoc = CmdFlickr()
-        //self.photoSet = getLoc.getPhotosForLocation(mapLoc.latitude, longitude: mapLoc.longitude)
-        getLoc.getPhotosForLocation(newLat, longitude: newLong, completionHandler: { (nwData, success, errorStr) -> Void in
-            if success {
-                //NEED THE IF/LET TO PERFORM THE CAST
-                if let newArr = nwData {
-                    //now add each photo from the array in to the entity Photo and
-                    //associate that photo to a given Pin location
-                    for pic in newArr {
-                        let newPic = Photo(photoURL: pic as! String, context: self.sharedContext)
-                        newPic.pin = newPin
-                    }
-                    //save context
-                    do {
-                        try self.sharedContext.save()
-                    } catch {
-                        print ("failed to save MOC for Photo")
-                    }
-                    
-                    //while the next view is loading, start downloading all photos and save in core data
-                    //make this a separate thread
-                    //http://www.raywenderlich.com/79149/grand-central-dispatch-tutorial-swift-part-1
-                    //chose QoS utility thread
-                    dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), { () -> Void in
-                        print("local file path : \(SaveHelper.locFilePath)")
-                        for image in newArr {
-                                SaveHelper.savePhotoFromURL(image as! String)
-                        }
-                    })
-                }
- 
-            } else {
-                print("failed to get photos from locationViewController")
-            }
-        })
     }
 
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
@@ -235,7 +193,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
                 } catch {
                     print ("failed to save MOC for Pin")
                 }
-                self.getNewPhotos(lat, newLong: long, newPin: locToBeAdded)
+                SaveHelper.getNewPhotos(lat, newLong: long, newPin: locToBeAdded)
                 
                 //now delete old pin
                 let oldPinLoc = getCurrPin(createID(lat, longitude: long))

@@ -39,8 +39,12 @@ class CmdFlickr {
                 self.returnNumOfPages(result, completionHandler: { (numPages, success, errorString) -> Void in
                     if (success) {
                         print("flickr pages 2 : \(numPages)")
+                        //PICK THE MIN BETWEEN FLICKR PAGES AND 70, AS IT TOOK AN F-ING WHILE TO DISCOVER FLICKR
+                        //RETURNS PAGE 1 BY DEFAULT IF YOU EXCEED WELL, AROUND 70 WITH 55 PHOTOS PER PAGE IT SEEMS
+                        //10000 PAGES WORTH OF PHOTOS, AND I GET 70...my code was actually working
+                        let hugelyScaledDownPages = min(numPages, 70)
                         //pick random picture page, append dictionaries from SequenceType
-                        flickrPage = Int(arc4random_uniform(UInt32(numPages))+1)
+                        flickrPage = Int(arc4random_uniform(UInt32(hugelyScaledDownPages))+1)
                         print("RANDOM PAGE : \(flickrPage)")
                         dictMod.updateValue(flickrPage, forKey: "page")
                         //http://austinzheng.com/2015/01/24/swift-seq/
@@ -49,22 +53,25 @@ class CmdFlickr {
                         dictMod.forEach({ (k,v) -> () in
                             location.updateValue(v , forKey: k )
                         })
-                        print("location 2 : \(dictMod)")
+                        print("location 2 : \(location)")
                         //now get list of photos from page #random
                         self.nw.nwGetJSON(location) { (result, success, error) -> Void in
                             //if JSON object is valid, then
                             //1) segue to next view
                             //2) while downloading each image into its own entity
                             //3) pass Pin information and show those photos from that entity WITH PLACEHOLDERS WHILE DOWNLOAD COMPLETES
-                            photoArr = self.returnPhotoURLSet(result, completionHandler: { (success, errorString) -> Void in
-                                if !success {
-                                    completionHandler(nwData: nil, success: false, errorStr: "failed to get photo data")
-                                    return
-                                }
-                            })
-                            completionHandler(nwData: photoArr, success: true, errorStr: nil)
-                            
-                            print("PHOTO URLS : \(photoArr)")
+                            if (success) {
+                                photoArr = self.returnPhotoURLSet(result, completionHandler: { (success, errorString) -> Void in
+                                    if !success {
+                                        completionHandler(nwData: nil, success: false, errorStr: "failed to get photo data")
+                                        return
+                                    }
+                                    
+                                })
+                                completionHandler(nwData: photoArr, success: true, errorStr: nil)
+                                
+                                print("PHOTO URLS : \(photoArr)")
+                            }
                         }
                     } else {
                         print("error string : \(errorString)")
