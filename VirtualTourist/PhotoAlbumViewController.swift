@@ -26,6 +26,7 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     var currID : String?
     var currPin : Pin?
     @IBOutlet weak var collView: UICollectionView!
+    @IBOutlet weak var getNewCollButt: UIButton!
 
     var context : NSManagedObjectContext {
         return appDelegate.managedObjectContext
@@ -37,6 +38,9 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        //i think these need to persist outside of the photo collection view
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "enableNewCollButton", name: "enableNewCollButt", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "disableNewCollButton", name: "disableNewCollButt", object: nil)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -51,8 +55,6 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateDisplay", name: "updatePhotoCollection", object: nil)
         updateDisplay()
         
-        //perform fetchRequest with predicate on currID, and return that Pin entity
-        
     }
 
     override func viewWillDisappear(animated: Bool) {
@@ -64,6 +66,8 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         self.delegate?.returnToMap(self)
     }
     @IBAction func getNewCollection(sender: UIButton) {
+        //on get new collection, new photos will be downloaded, so disable button until call complete
+        NSNotificationCenter.defaultCenter().postNotificationName("disableNewCollButt", object: self)
         //remove all previous photos
         print("NUM OF PHOTOS TO DELETE \(currPin?.photos.count)")
         var count = 0
@@ -109,21 +113,20 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         }
     }
     
-    //this fixes a glitch where collection view doesn't display content correctly first time
-    //(too high in nav bar)...upon navigating away and returning, it worked, but this resolves that
-    //http://stackoverflow.com/questions/18896210/ios7-uicollectionview-appearing-under-uinavigationbar
-    override func viewDidLayoutSubviews() {
-        let top = self.topLayoutGuide.length
-        let bottom = self.bottomLayoutGuide.length
-        let newInsets = UIEdgeInsetsMake(top, 0, bottom, 0)
-        self.collView.contentInset = newInsets
-    }
+//    //this fixes a glitch where collection view doesn't display content correctly first time
+//    //(too high in nav bar)...upon navigating away and returning, it worked, but this resolves that
+//    //http://stackoverflow.com/questions/18896210/ios7-uicollectionview-appearing-under-uinavigationbar
+//    override func viewDidLayoutSubviews() {
+//        let top = self.topLayoutGuide.length
+//        let bottom = self.bottomLayoutGuide.length
+//        let newInsets = UIEdgeInsetsMake(top, 0, bottom, 0)
+//        self.collView.contentInset = newInsets
+//    }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        //OLD_WORKING
-        //return photoURLs!.count
         return currPin!.photos.count
     }
+    
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("photoCell", forIndexPath: indexPath) as! PhotoCollectionCell
         
@@ -131,7 +134,6 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         
         //populate collection from photos that have been downloaded
         cell.flickrImage.image = SaveHelper.loadSavedPhoto(pic)
-        
         
         return cell
     }
@@ -162,8 +164,23 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     }
     
     func updateDisplay() {
+        //run the update in GCD main thread to avoid delays
         dispatch_async(dispatch_get_main_queue()) { () -> Void in
             self.collView.reloadData()
+        }
+    }
+    
+    //was not greying out...turns out forgot about dispatch_async...
+    
+    func disableNewCollButton() {
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            self.getNewCollButt.enabled = false
+        }
+    }
+    
+    func enableNewCollButton() {
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            self.getNewCollButt.enabled = true
         }
     }
 }

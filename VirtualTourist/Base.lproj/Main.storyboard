@@ -24,8 +24,8 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="gMr-da-y0F"/>
                                 </connections>
                             </mapView>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="tba-of-G9y">
-                                <rect key="frame" x="0.5" y="-0.5" width="600" height="600"/>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="tba-of-G9y">
+                                <rect key="frame" x="1" y="-1" width="600" height="601"/>
                                 <animations/>
                                 <color key="color" red="0.58788596323116504" green="0.24075942141338266" blue="0.89019097219999999" alpha="1" colorSpace="calibratedRGB"/>
                             </activityIndicatorView>
@@ -100,10 +100,10 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="photoCell" id="FC3-oD-8aQ" customClass="PhotoCollectionCell" customModule="VirtualTourist" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="64" width="115.5" height="108"/>
+                                        <rect key="frame" x="0.0" y="64" width="116" height="108"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="115.5" height="108"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="116" height="108"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="oNf-C5-AmC">
@@ -138,13 +138,20 @@
                                 <rect key="frame" x="20" y="64" width="560" height="150"/>
                                 <animations/>
                             </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bkf-AA-bbH">
+                            <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bkf-AA-bbH">
                                 <rect key="frame" x="0.0" y="570" width="600" height="30"/>
                                 <animations/>
+                                <color key="backgroundColor" red="1" green="0.94616521539999998" blue="0.6270024716" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="laC-wb-PW1"/>
                                 </constraints>
-                                <state key="normal" title="New Collection"/>
+                                <color key="tintColor" red="0.0" green="0.046865278199999999" blue="0.89019097219999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="New Collection">
+                                    <color key="titleColor" red="0.0" green="0.046865278199999999" blue="0.89019097219999999" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <state key="disabled">
+                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
                                     <action selector="getNewCollection:" destination="xgZ-oJ-nEp" eventType="touchUpInside" id="vdu-KK-wTX"/>
                                 </connections>
@@ -187,6 +194,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="collView" destination="dOP-gB-VA1" id="mVU-G4-pxx"/>
+                        <outlet property="getNewCollButt" destination="bkf-AA-bbH" id="Xm0-9t-ZOs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j9u-Ja-N1c" userLabel="First Responder" sceneMemberID="firstResponder"/>

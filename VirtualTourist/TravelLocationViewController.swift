@@ -115,8 +115,10 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
             } catch {
                 print ("failed to save MOC for Pin")
             }
-            //retrieve photo URLs from this location and save to Pin entity
+            //retrieve photo URLs from this location and save to Pin entity...auto start downloading photos as well
             SaveHelper.getNewPhotos(mapLoc.latitude, newLong: mapLoc.longitude, newPin: locToBeAdded)
+            //downloading photos, so disable 'new collection' button in next view
+            NSNotificationCenter.defaultCenter().postNotificationName("disableNewCollButt", object: self)
     
             return
         case .Ended:
@@ -228,19 +230,6 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
         }
         
     }
-    
-//    //MARK: change URL to call your collection of photos
-//    
-//    // This delegate method is implemented to respond to taps. It opens the system browser
-//    // to the URL specified in the annotationViews subtitle property.
-//    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-//        if control == view.rightCalloutAccessoryView {
-//            let app = UIApplication.sharedApplication()
-//            app.openURL(NSURL(string: view.annotation!.subtitle!!)!)
-//        }
-//    }
-//    //used this to find out how to get the coordinate point from the touch :
-//    //https://freshmob.com.au/mapkit-tap-and-hold-to-drop-a-pin-on-the-map/
-//
+
 }
 

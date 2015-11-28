@@ -148,9 +148,10 @@ class SaveHelper : NSObject {
                             SaveHelper.savePhotoFromURL(image as! String)
                             //after each save, notify that a new photo exists to update collection
                             NSNotificationCenter.defaultCenter().postNotificationName("updatePhotoCollection", object: self)
-                            
-                            
                         }
+                        print("saved all images")
+                        //saved all images, enable new collection button on photoCollectionView
+                        NSNotificationCenter.defaultCenter().postNotificationName("enableNewCollButt", object: self)
                     })
                 }
                 
