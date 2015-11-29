@@ -97,7 +97,8 @@ class SaveHelper : NSObject {
         if let newImage = UIImage(contentsOfFile: localImagePath) {
             return newImage
         } else {
-            print("failed to retrieve saved image")
+            //no debug statement here because this is a typical failure mode if the user scrolls
+            //to unpopulated collection item placeholders (photos still downloading)
             return nil
         }
     }
@@ -128,7 +129,6 @@ class SaveHelper : NSObject {
                         newPic.pin = newPin
                         let locPath = setLocImagePath(pic.lastPathComponent as String).path!
                         newPic.localPath = locPath
-                        print("................local path \(locPath)")
                     }
                     //save context
                     do {
@@ -152,7 +152,6 @@ class SaveHelper : NSObject {
                             //after each save, notify that a new photo exists to update collection
                             NSNotificationCenter.defaultCenter().postNotificationName("updatePhotoCollection", object: self)
                         }
-                        print("saved all images")
                         //saved all images, enable new collection button on photoCollectionView
                         NSNotificationCenter.defaultCenter().postNotificationName("enableNewCollButt", object: self)
                     })

@@ -73,11 +73,9 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
         var annotations = [MyAnnotation]()
         //now load pins from previous sessions for display
         userLocations = fetchAllPins()
-        print("userLocations : \(userLocations.count)")
 
         //createAnnosFromPins function exists as a protocol extension in the project file Location.swift
         annotations = createAnnosFromPins(userLocations, currMapView: self.mapView)
-        print("number of annotations : \(annotations.count)")
         
         //now update map on GCD thread
         //NEED TO REMOVE self.mapview.annotations so that you don't get shadows...just 'annotations' there isn't enough
@@ -120,14 +118,13 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
             }
             //retrieve photo URLs from this location and save to Pin entity...auto start downloading photos as well
             SaveHelper.getNewPhotos(mapLoc.latitude, newLong: mapLoc.longitude, newPin: locToBeAdded)
+            
             //downloading photos, so disable 'new collection' button in next view
             NSNotificationCenter.defaultCenter().postNotificationName("disableNewCollButt", object: self)
     
             return
-        case .Ended:
-            print("ENDED : HOPEFULLY A PIN WAS DROPPED")
         case .Failed:
-            print("failure")
+            print("failure during long touch")
         default:
             print("gesture default message...did something else")
         }
@@ -142,13 +139,11 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
             vcDelegate.delegate = self
             
             vcDelegate.currID = self.selectedID
-            print("going to show photo collection now...add data here")
             getAndSaveCurrMapView()
         }
     }
     
     func returnToMap(controller: PhotoAlbumViewController) {
-        print("return function called")
         self.inProgress.stopAnimating()
         //necessary to return across a navigation view controller, as many others just pop to
         //the top of the view controller stack...not desired result in this case.
@@ -174,41 +169,6 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate, PhotoAl
         }
         return pinView
         
-    }
-    
-    
-    //conform to MKAnnotation protocol
-    //support pin dragging
-    //update annotation colors :
-    //http://stackoverflow.com/questions/33532883/add-different-pin-color-with-mapkit-in-swift-2-1
-    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, didChangeDragState newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
-        print("DRAAAAAAGING")
-        if newState == .Ending {
-            let droppedAt : CLLocationCoordinate2D = (view.annotation?.coordinate)!
-            let lat = droppedAt.latitude
-            let long = droppedAt.longitude
-            print("pin dropped at : \(lat), \(long)")
-            //let getLoc = CmdFlickr()
-            //retrieve photos from this location and save to Pin entity
-            
-            //check that pin is not dragged on to another pin's location (highly unlikely)
-            let newPin = getCurrPin(createID(lat, longitude: long))
-            if  newPin == nil {
-                print("PPPPPPPPPPPPPPP>>>>>>>>Making new pin on drag")
-                //need to create new Pin with this new location, and delete old pin with old location (and photos...)
-                let locToBeAdded = Pin(latitude: lat, longitude: long, context: sharedContext)
-                self.userLocations.append(locToBeAdded)
-                do {
-                    try sharedContext.save()
-                } catch {
-                    print ("failed to save MOC for Pin")
-                }
-                SaveHelper.getNewPhotos(lat, newLong: long, newPin: locToBeAdded)
-                
-//                //now delete old pin
-//                let oldPinLoc = getCurrPin(createID(lat, longitude: long))
-            }
-        }
     }
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {

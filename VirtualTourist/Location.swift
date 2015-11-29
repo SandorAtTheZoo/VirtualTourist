@@ -64,7 +64,6 @@ extension MKMapViewDelegate {
     func createID(latitude : Double, longitude : Double) -> String {
         var id = String(format: "%f", latitude)
         id.appendContentsOf(String(format: "%f", longitude))
-        print("OBBBBBBBBject ID : \(id)")
         return id
     }
     

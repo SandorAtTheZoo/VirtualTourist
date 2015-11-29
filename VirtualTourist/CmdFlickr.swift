@@ -34,18 +34,15 @@ class CmdFlickr {
         self.nw.nwGetJSON(location) { (result, success, error) -> Void in
             if (success) {
                 //get number of pages of pictures from this location for randomization
-                print("flickr pages : \(flickrPage)")
-                print("parameters : \(location)")
                 self.returnNumOfPages(result, completionHandler: { (numPages, success, errorString) -> Void in
                     if (success) {
-                        print("flickr pages 2 : \(numPages)")
                         //PICK THE MIN BETWEEN FLICKR PAGES AND 70, AS IT TOOK AN F-ING WHILE TO DISCOVER FLICKR
                         //RETURNS PAGE 1 BY DEFAULT IF YOU EXCEED WELL, AROUND 70 WITH 55 PHOTOS PER PAGE IT SEEMS
                         //10000 PAGES WORTH OF PHOTOS, AND I GET 70...my code was actually working
                         let hugelyScaledDownPages = min(numPages, 70)
                         //pick random picture page, append dictionaries from SequenceType
                         flickrPage = Int(arc4random_uniform(UInt32(hugelyScaledDownPages))+1)
-                        print("RANDOM PAGE : \(flickrPage)")
+
                         dictMod.updateValue(flickrPage, forKey: "page")
                         //http://austinzheng.com/2015/01/24/swift-seq/
                         //with some mucking about in the playground...I need to read up more on this...and yeah, it's way
@@ -53,7 +50,7 @@ class CmdFlickr {
                         dictMod.forEach({ (k,v) -> () in
                             location.updateValue(v , forKey: k )
                         })
-                        print("location 2 : \(location)")
+
                         //now get list of photos from page #random
                         self.nw.nwGetJSON(location) { (result, success, error) -> Void in
                             //if JSON object is valid, then
@@ -69,8 +66,6 @@ class CmdFlickr {
                                     
                                 })
                                 completionHandler(nwData: photoArr, success: true, errorStr: nil)
-                                
-                                print("PHOTO URLS : \(photoArr)")
                             }
                         }
                     } else {

@@ -21,8 +21,6 @@ protocol PhotoAlbumViewControllerDelegate {
 class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, MKMapViewDelegate {
     
     var delegate : PhotoAlbumViewControllerDelegate! = nil
-    //OLD_WORKING
-    //var photoURLs : NSMutableArray? = nil
     var currID : String?
     var currPin : Pin?
     
@@ -68,17 +66,14 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     }
     
     @IBAction func selectNewLocation(sender: UIBarButtonItem) {
-        print("delegate call to return")
         self.delegate?.returnToMap(self)
     }
     @IBAction func getNewCollection(sender: UIButton) {
         //on get new collection, new photos will be downloaded, so disable button until call complete
         NSNotificationCenter.defaultCenter().postNotificationName("disableNewCollButt", object: self)
         //remove all previous photos
-        print("NUM OF PHOTOS TO DELETE \(currPin?.photos.count)")
         var count = 0
         for _ in (currPin?.photos)! {
-            print("deleting : \(count)")
             deletePhoto(count)
             count++
         }
@@ -96,10 +91,6 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         } catch {
             print("failed to save context")
         }
-        //collection should be updated here, but threads to get URLs and save photos to documents directory haven't returned yet
-        //so add notifier to call updateDisplay() when network and I/O threads return
-
-        print("CURRRR333333333333RRR : \(currPin?.photos.count)")
     }
     
     func fetchPhotoToDelete(withURL : String) -> Photo? {
@@ -208,7 +199,6 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         
         //createAnnosFromPins function exists as a protocol extension in the project file Location.swift
         annotations = createAnnosFromPins([currPin!], currMapView: self.mapView)
-        print("number of annotations : \(annotations.count)")
         
         //now update map on GCD thread
         //NEED TO REMOVE self.mapview.annotations so that you don't get shadows...just 'annotations' there isn't enough

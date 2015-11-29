@@ -34,14 +34,10 @@ class NWFlickr : NSObject {
         //parameters is a dictionary of parameters to be filled in as part of this api call
         let mutableParameters = addDefaultParams(parameters, oldParams: defaultParams)
         
-        //MARK: don't forget to add bbox at some point
-        
         //configure the request
         let urlString = Base.url + NWFlickr.escapedParameters(mutableParameters)
         let url = NSURL(string: urlString)!
         let request = NSURLRequest(URL: url)
-    //debug
-        print(url)
         
         //initiate session with Flickr to download stuff
         let task = session.dataTaskWithRequest(request) { data, response, downloadError in
@@ -49,7 +45,6 @@ class NWFlickr : NSObject {
                 let newError = NWFlickr.errorForData(data, response: response, error: error)
                 completionHandler(result: nil, success : false, error: newError)
             } else {
-                print("got response from Flickr query SAT")
                 NWFlickr.parseJSONWithCompletionHandler(data!, completionHandler: completionHandler)
             }
         }
@@ -59,7 +54,7 @@ class NWFlickr : NSObject {
         return task
     }
     
-    //yeah, it's cut and paste out of the previous projects, but it's pretty damn handy
+    //yeah, it's cut and paste out of my/udacity previous projects, but it's pretty damn handy
     // URL Encoding a dictionary into a parameter string
     
     class func escapedParameters(parameters: [String : AnyObject]) -> String {
@@ -125,7 +120,6 @@ class NWFlickr : NSObject {
         if let error = parsingError {
             completionHandler(result: nil, success:false, error: error)
         } else {
-            print("Step 4 - parseJSONWithCompletionHandler is invoked.")
             completionHandler(result: parsedResult, success:true, error: nil)
         }
         //there is no return because the data is passed in from the session closure, and the completion handler 'result' parameter returns the well, JSON result

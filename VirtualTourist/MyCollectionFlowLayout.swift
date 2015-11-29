@@ -26,4 +26,10 @@ extension PhotoAlbumViewController : UICollectionViewDelegateFlowLayout {
 //            }
 //            return CGSize(width: 100, height: 100)
 //    }
+    
+    //http://stackoverflow.com/questions/15514526/uicollectionview-distance-between-cells
+    //may help if compiled on larger devices
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
+        return 5
+    }
 }
