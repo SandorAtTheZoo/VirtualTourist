@@ -126,6 +126,9 @@ class SaveHelper : NSObject {
                     for pic in newArr {
                         let newPic = Photo(photoURL: pic as! String, context: self.sharedContext)
                         newPic.pin = newPin
+                        let locPath = setLocImagePath(pic.lastPathComponent as String).path!
+                        newPic.localPath = locPath
+                        print("................local path \(locPath)")
                     }
                     //save context
                     do {

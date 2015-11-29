@@ -135,7 +135,7 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        //deletePhoto(indexPath.row)
+
         deletePhoto(indexPath.row)
         //save context
         do {
